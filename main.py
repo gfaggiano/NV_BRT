@@ -4,7 +4,10 @@ import datetime
 import subprocess
 import winreg
 import logging
+import json
 from pathlib import Path
+
+from make_json import src_dir
 
 
 def setup_logging():
@@ -43,7 +46,14 @@ def create_backup_directory():
 
 def backup_nvidia_profile_files(backup_dir):
     """Copy NVIDIA profile configuration files from ProgramData."""
-    src_dir = Path(os.getenv('PROGRAMDATA')) / "NVIDIA Corporation" / "Drs"
+    # read the value for src_dir from the config JSON file
+    config_file = "config.json"
+    if os.path.exists(config_file):
+        with open(config_file, "r") as f:
+            config = json.load(f)
+        src_dir = Path(config["src_dir"])
+    else:
+        src_dir = Path(os.getenv('PROGRAMDATA')) / "NVIDIA Corporation" / "Drs"
     if not src_dir.exists():
         logging.warning(f"NVIDIA profile directory not found: {src_dir}")
         return False
@@ -95,6 +105,7 @@ def main():
     if profile_backup_success and registry_backup_success:
         logging.info(f"Backup completed successfully. Files saved to: {backup_dir}")
         print(f"\nBackup completed! Files saved to: {backup_dir}")
+        logging.info("Please manually document display settings (e.g., resolution, refresh rate, HDR) as they are not included.")
         print(
             "Please manually document display settings (e.g., resolution, refresh rate, HDR) as they are not included.")
     else:
@@ -107,7 +118,22 @@ def main():
         f.write(f"Backup Date: {datetime.datetime.now()}\n")
         f.write(f"System: Windows 11 Pro 64-bit (Build 26100)\n")
         f.write(f"GPU: NVIDIA GeForce RTX 4070 Ti SUPER\n")
-
+    with open(backup_dir / "backup_summary.txt", "w") as f:
+        f.write(f"Backup completed on: {datetime.datetime.now()}\n")
+        f.write(f"Backup directory: {backup_dir}\n")
+        f.write(f"Driver version: {driver_version}\n")
+        f.write(f"Profile backup success: {profile_backup_success}\n")
+        f.write(f"Registry backup success: {registry_backup_success}\n")
+        f.write("Please manually document display settings (e.g., resolution, refresh rate, HDR) as they are not included.")
+        f.write("\nNext steps:\n")
+        f.write("- Verify the backup files in the directory.\n")
+        f.write("- Consider copying the backup folder to an external drive or cloud storage.\n")
+        f.write("- To restore, manually import the .reg file and copy profile files back (see documentation).\n")
+        f.write(f"-- The profiles were copied from: {src_dir}\n")
+        f.write(f"-- Check this location for the profiles when restoring your settings, but know that NVIDIA\n-- may have change the location depending on the driver version.\n")
+    logging.info(f"Driver info saved to: {backup_dir / 'driver_info.txt'}")
+    os.startfile(backup_dir)
+    os.startfile(f"{backup_dir}/backup_summary.txt")
     print("\nNext steps:")
     print("- Verify the backup files in the directory.")
     print("- Consider copying the backup folder to an external drive or cloud storage.")
