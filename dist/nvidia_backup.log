@@ -1,8 +1,0 @@
-2025-04-26 20:18:42,084 - INFO - Starting NVIDIA driver settings backup process
-2025-04-26 20:18:42,822 - INFO - NVIDIA Driver Version: 576.02
-2025-04-26 20:18:42,822 - INFO - Created backup directory: C:\Users\gabri\NVIDIA_Settings_Backup_20250426_201842
-2025-04-26 20:18:42,828 - INFO - Backed up NVIDIA profile files to: C:\Users\gabri\NVIDIA_Settings_Backup_20250426_201842\NVIDIA_Profiles
-2025-04-26 20:18:43,511 - INFO - Backed up NVIDIA registry settings to: C:\Users\gabri\NVIDIA_Settings_Backup_20250426_201842\nvidia_registry_backup.reg
-2025-04-26 20:18:43,512 - INFO - Backup completed successfully. Files saved to: C:\Users\gabri\NVIDIA_Settings_Backup_20250426_201842
-2025-04-26 20:18:43,512 - INFO - Please manually document display settings (e.g., resolution, refresh rate, HDR) as they are not included.
-2025-04-26 20:18:43,513 - INFO - Driver info saved to: C:\Users\gabri\NVIDIA_Settings_Backup_20250426_201842\driver_info.txt
